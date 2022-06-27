@@ -1,0 +1,1 @@
+# guides.securityhandbook.cz
