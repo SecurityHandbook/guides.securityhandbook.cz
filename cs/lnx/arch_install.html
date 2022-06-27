@@ -1,0 +1,412 @@
+<!DOCTYPE html>
+<html lang="cs">
+<head>
+<meta charset="utf-8">
+<link rel="preload" as="style" href="https://securityhandbook.cz/resources/css/article_alpha.css">
+<link href="https://securityhandbook.cz/resources/css/article_alpha.css" rel="stylesheet" media="screen">
+<link href="https://securityhandbook.cz/resources/css/fonts_min.css" rel="stylesheet">
+<title>Instalace Arch Linux</title>
+<meta name="description" content="Jak nainstalovat Arch Linux.">
+<meta property="og:title" content="Instalace Arch Linux">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="HandheldFriendly" content="True">
+<meta name="theme-color" content="#323e4e">
+</head>
+<body>
+<main>
+<article><div class="text">
+<h1>Instalace Arch Linux</h1>
+<h2 id="gd1">Instalační médium</h2>
+<p>Návod na vytvoření instalačního média je určen pro <strong>OS Linux</strong>. Pokud vytváříte instalační médium z <strong>OS Windows</strong>, jednoduše použijte <a target="_blank" rel="noopener" href="https://guides.securityhandbook.cz/cs/wnt/rufus.php">Rufus</a>.</p>
+<ul>
+<li>Otevřete si <a target="_blank" rel="noopener" href="https://pkg.adfinis-sygroup.ch/archlinux/iso/latest/">následující stránku</a>.</li>
+<li>Stáhněte si nejnovější <em>ISO</em> a jeho <em>SIG</em> podpis.</li>
+<li>Zkontrolujte podpis ISO souboru pomocí následujícího příkazu:</li>
+<li style="list-style-type: none"><pre><code>gpg --keyserver-options auto-key-retrieve --verify archlinux-*.iso.sig</code></pre></li>
+<li>Vložte USB disk do PC.</li>
+<li>Zjistěte jeho identifikátor.</li>
+<li style="list-style-type: none"><pre><code>lsblk</code></pre></li>
+<li>Následně jej odpojte – pokud byl automaticky připojen. (místo <span class="red">x</span> vždy dosaďte příslušné písmeno)</li>
+<li style="list-style-type: none"><pre><code>sudo umount /dev/sdx</code></pre></li>
+<li>Rozbalte na něj instalační soubory <em>Arch Linux</em>.</li>
+<li style="list-style-type: none"><pre><code>sudo dd bs=4M if=./archlinux-*.iso of=/dev/sdx status=progress &amp;&amp; sync</code></pre></li>
+</ul>
+<br><br><hr><br>
+
+<h2 id="gd2">Příprava na instalaci</h2>
+<ul>
+<li>Nabootujte live OS. V průběhu instalace budete používat americké rozložení klávesnice, máte jej popsané na levé straně kláves vaší fyzické klávesnice.</li>
+<li>Používáte-li WiFi připojení, nejprve se připojte k vaší síti:</li>
+<li style="list-style-type: none"><pre><code>wifi-menu</code></pre></li>
+<li>Ověřte připojení k internetu:</li>
+<li style="list-style-type: none"><pre><code>ping -c3 8.8.8.8</code></pre></li>
+<li>Aktualizujte datum a čas:</li>
+<li style="list-style-type: none"><pre><code>timedatectl set-ntp true</code></pre></li>
+</ul>
+<br>
+<h3 id="gd2.1">Rozdělení disku:</h3>
+<ul>
+<li>Zjistěte název a aktuální rozložení požadovaného disku:</li>
+<li style="list-style-type: none"><pre><code>lsblk</code></pre></li>
+<li>Jakmile identifikujete váš disk, otevřete jej v aplikaci <span class="green">parted</span>.</li>
+<li style="list-style-type: none"><pre><code>parted /dev/sdx</code></pre></li>
+<li>Otevře se správa disku. Nastavte <em>GiB</em> jako výchozí jednotku a následně vypište aktuální stav disku.</li>
+<li style="list-style-type: none"><pre><code>unit GiB
+print</code></pre></li>
+<li>Před vytvořením nové tabulky oddílů určtete požadovaný typ rozdělení disku (<strong>GPT</strong> či <strong>MBR</strong>).</li>
+</ul>
+<div class="alert info"><p><em class="icon-info-circled"></em><strong>Info</strong><br>
+Pro stroje z roku 2014 a novější pravděpodobně bude jednat o GPT. U starších přístrojů a většiny virtuálních prostředí ve výchozím nastavení se bude jednat o MBR. <strong>Kroky níže jsou optimalizovány pro GPT schéma.</strong></p></div>
+
+<div class="spoilwrapper"><div class="spoiltitle">
+<span class="spoilbtn" data-show="► Přepsání celého disku a vymezení určité části pro Arch (1 disk GPT)" data-hide="▼ Přepsání celého disku a vymezení určité části pro Arch (1 disk GPT)">► Přepsání celého disku a vymezení určité části pro Arch (1 disk GPT)</span></div>
+<div class="spoilcontent">
+<ul>
+<li>Odstraňte předchozí záznamy o diskových oddílech.<li style="list-style-type: none"><pre><code>mklabel gpt</code></pre></li></li>
+<li>Vytvořte ESP oddíl:<li style="list-style-type: none"><pre><code>mkpart ESP fat32 1MiB 513MiB
+set 1 boot on</code></pre></li></li>
+<li>Vytvořte systémový oddíl o velikosti 50 GiB:</li>
+<li style="list-style-type: none"><pre><code>mkpart primary btrfs 513MiB 50.5</code></pre></li>
+<li>Vytvořte datový oddíl libovolné velikosti (v příkladu níže 500 GiB):</li>
+<li style="list-style-type: none"><pre><code>mkpart primary btrfs 50.5 550.5</code></pre></li>
+<li>Vytvořte oddíl na dočasné soubory o velikosti 2 GiB:</li>
+<li style="list-style-type: none"><pre><code>mkpart primary btrfs 550.5 552.5</code></pre></li>
+<li>Vytvořte swap oddíl o velikosti 2 GiB:</li>
+<li style="list-style-type: none"><pre><code>mkpart primary linux-swap 552.5 554.5</code></pre></li>
+<li>Oddíly zkontrolujte a editor ukončete:</li>
+<li style="list-style-type: none"><pre><code>print
+quit</code></pre></li>
+</ul></div></div>
+<div class="spoilwrapper"><div class="spoiltitle">
+<span class="spoilbtn" data-show="► Přepsání celého disku a vymezení určité části pro Arch (1 disk MBR)" data-hide="▼ Přepsání celého disku a vymezení určité části pro Arch (1 disk MBR)">► Přepsání celého disku a vymezení určité části pro Arch (1 disk MBR)</span></div>
+<div class="spoilcontent">
+<ul>
+<li>Odstraňte předchozí záznamy o diskových oddílech.</li>
+<li style="list-style-type: none"><pre><code>mklabel msdos</code></pre></li>
+<li>Vytvořte systémový oddíl o velikosti 50 GiB:</li>
+<li style="list-style-type: none"><pre><code>mkpart primary btrfs 1MiB 50
+set 1 boot on</code></pre></li>
+<li>Vytvořte datový oddíl libovolné velikosti (v příkladu níže 500 GiB):</li>
+<li style="list-style-type: none"><pre><code>mkpart primary btrfs 50 550</code></pre></li>
+<li>Vytvořte oddíl na dočasné soubory o velikosti 2 GiB:</li>
+<li style="list-style-type: none"><pre><code>mkpart primary btrfs 550 552</code></pre></li>
+<li>Vytvořte swap oddíl o velikosti 2 GiB:</li>
+<li style="list-style-type: none"><pre><code>mkpart primary linux-swap 552 554</code></pre></li>
+<li>Oddíly zkontrolujte a editor ukončete:</li>
+<li style="list-style-type: none"><pre><code>print
+quit</code></pre></li>
+</ul></div></div>
+<br>
+<h3 id="gd2.2">Vytvoření souborových systémů:</h3>
+<ul>
+<li>Vypište a identifikujte jednotlivé diskové oddíly:</li>
+<li style="list-style-type: none"><pre><code>lsblk</code></pre></li>
+<li>Vytvořte <em>fat32</em> pro <strong>ESP oddíl</strong> a <em>&bdquo;přepište&ldquo;</em> ostatní oddíly:</li>
+<li style="list-style-type: none"><pre><code>mkdosfs -F32 /dev/sdx1
+mkdosfs -F32 /dev/sdx2
+mkdosfs -F32 /dev/sdx3
+mkdosfs -F32 /dev/sdx4</code></pre></li>
+<li>Vytvořte <em>swap</em>:</li>
+<li style="list-style-type: none"><pre><code>mkswap /dev/sdx5
+swapon /dev/sdx5</code></pre></li>
+<li>Vytvořte <em>btrfs</em> pro zbylé oddíly:</li>
+<li style="list-style-type: none"><pre><code>mkfs.btrfs -f /dev/sdx2
+mkfs.btrfs -f /dev/sdx3
+mkfs.btrfs -f /dev/sdx4</code></pre></li>
+</ul>
+<br>
+<h3 id="gd2.3">Připojení vytvořených oddílů:</h3>
+<ul>
+<li>Připojte systémový oddíl.</li>
+<li style="list-style-type: none"><pre><code>mount /dev/sdx2 /mnt</code></pre></li>
+<li>Připojte <strong>ESP</strong> oddíl jako <em>/boot/efi</em>:</li>
+<li style="list-style-type: none"><pre><code>mkdir -p /mnt/boot/efi
+mount /dev/sdx1 /mnt/boot/efi</code></pre></li>
+<li>Připojte datový oddíl jako <em>/home</em> a oddíl pro dočasné soubory jako <em>/tmp</em>:</li>
+<li style="list-style-type: none"><pre><code>mkdir /mnt/home
+mkdir /mnt/tmp
+mount /dev/sdx3 /mnt/home
+mount /dev/sdx4 /mnt/tmp</code></pre></li>
+</ul>
+<br><br><hr><br>
+
+<h2 id="gd3">Instalace</h2>
+<ul>
+<li>Upravte seznam zrcadel pro stahování balíčků. Řádky mažete klávesovou zkratkou <strong>Ctrl</strong> + <strong>K</strong>. Následně zbylé servery upravíte pro přístup přes https. Změny zavřete a uložíte <strong>Ctrl</strong> + <strong>X</strong> a klávesou <span class="red">Y</span>.</li>
+<li style="list-style-type: none"><pre><code>nano /etc/pacman.d/mirrorlist</code></pre></li>
+<li style="list-style-type: none"><pre><code>## Iceland
+Server = https://mirror.system.is/arch/$repo/os/$arch
+## Switzerland
+Server = https://pkg.adfinis-sygroup.ch/archlinux/$repo/os/$arch
+## Czechia
+Server = https://ftp.sh.cvut.cz/arch/$repo/os/$arch
+## Switzerland
+Server = https://mirror.puzzle.ch/archlinux/$repo/os/$arch
+</code></pre></li>
+<li>Vytvořte OS:</li>
+<li style="list-style-type: none"><pre><code>pacstrap /mnt base base-devel linux nano</code></pre></li>
+<li>Po dokončení vytvořte <em>fstab</em> pro nový OS. Následně jej zkontrolujte.</li>
+<li style="list-style-type: none"><pre><code>genfstab -U /mnt >> /mnt/etc/fstab
+cat /mnt/etc/fstab</code></pre></li>
+</ul>
+<br><br><hr><br>
+
+<h2 id="gd4">Konfigurace</h2>
+<ul>
+<li>Přepněte se do nového OS.</li>
+<li style="list-style-type: none"><pre><code>arch-chroot /mnt</code></pre></li>
+<li>Nastavte čas:</li>
+<li style="list-style-type: none"><pre><code>ln -s /usr/share/zoneinfo/Europe/Prague /etc/localtime
+hwclock --systohc</code></pre></li>
+<li>Nastavte lokalizaci (jazyk) OS. Chcete-li češtinu, v seznamu nalezněte řádek <span class="red">#cs_CZ.UTF-8</span> a odstraňte mřížku na jeho začátku. Změny uložte.</li>
+<li style="list-style-type: none"><pre><code>nano /etc/locale.gen</code></pre></li>
+<li>Vytvořte požadovanou lokalizaci a určete ji jako výchozí:</li>
+<li style="list-style-type: none"><pre><code>locale-gen
+echo LANG=cs_CZ.UTF-8 &gt; /etc/locale.conf</code></pre></li>
+<li>Nastavte název svého OS v síti (např. <em>arch</em>):</li>
+<li style="list-style-type: none"><pre><code>echo arch &gt; /etc/hostname</code></pre></li>
+<li>Nainstalujte potřebné aplikace pro připojení k WiFi a nástroje k souborovým systémům:</li>
+<li style="list-style-type: none"><pre><code>pacman -Sy iw wpa_supplicant dialog btrfs-progs dosfstools</code></pre></li>
+<li>Máte-li novější CPU (Sandy Bridge a výše) od <strong>Intel</strong>, nainstalujte microcode:</li>
+<li style="list-style-type: none"><pre><code>pacman -S intel-ucode</code></pre></li>
+<li>Nainstalujte <strong>GRUB</strong>:</li>
+<li style="list-style-type: none"><pre><code>pacman -S grub efibootmgr
+grub-install /dev/sdx
+grub-mkconfig -o /boot/grub/grub.cfg</code></pre></li>
+</ul>
+<br>
+
+<h3 id="gd4.1">Vytvoření uživatele:</h3>
+<ul>
+<li>Vytvořte účet správce.</li>
+<li style="list-style-type: none"><pre><code>useradd -m -G wheel uživatelské_jméno</code></pre></li>
+<li>Změňte heslo správce.</li>
+<li style="list-style-type: none"><pre><code>passwd uživatelské_jméno</code></pre></li>
+<li>Povolte <strong>sudo</strong> pro účet správce.</li>
+<li style="list-style-type: none"><pre><code>echo "uživatelské_jméno ALL=(ALL) ALL" > /etc/sudoers.d/uživatelské_jméno</code></pre></li>
+</ul>
+<br>
+
+<h3 id="gd4.2">Ovladače GPU:</h3>
+<ul>
+<li>Zjistěte výrobce a model své grafické karty. Pokud si nejste jistí, můžete ověřit následujícím příkazem:</li>
+<li style="list-style-type: none"><pre><code>lspci | grep -e VGA -e 3D</code></pre></li>
+<li>Následně dle tabulky vyberte vhodný ovladač.</li>
+</ul>
+<div class="alert info"><p><em class="icon-info-circled"></em><strong>Info</strong><br>
+S <em>open-source</em> ovladačem pro karty <strong>nVidia</strong> si moc dobře náročné hry nezahrajete. V případě herního zaměření možná bude nezbytné použít proprietární ovladače.</p></div>
+<table>
+<thead>
+<tr>
+<th>Výrobce</th>
+<th>Typ</th>
+<th>Ovladač</th>
+<th>OpenGL</th>
+<th>HW akcelerace</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>AMD<br>(GCN 3 a výše)</td>
+<td>open-source</td>
+<td>xf86-video-amdgpu</td>
+<td>mesa</td>
+<td>mesa-vdpau,<br>libva-vdpau-driver</td>
+</tr>
+<tr>
+<td>AMD<br>(GCN 2 a níže)</td>
+<td>open-source</td>
+<td>xf86-video-ati</td>
+<td>mesa</td>
+<td>mesa-vdpau,<br>libva-vdpau-driver</td>
+</tr>
+<tr>
+<td>Intel</td>
+<td>open-source</td>
+<td>xf86-video-intel</td>
+<td>mesa</td>
+<td>libva-intel-driver,<br>libvdpau-va-gl</td>
+</tr>
+<tr>
+<td>nVidia</td>
+<td>open-source</td>
+<td>xf86-video-nouveau</td>
+<td>mesa</td>
+<td>mesa-vdpau,<br>libva-vdpau-driver</td>
+</tr>
+<tr>
+<td>nVidia</td>
+<td>proprietární</td>
+<td>nvidia</td>
+<td>nvidia-utils</td>
+<td>nvidia-utils,<br>libva-vdpau-driver</td>
+</tr>
+</tbody>
+</table>
+<ul>
+<li>Potřebné balíčky nainstalujte. Pár příkladů níže:</li>
+<li style="list-style-type: none"><pre><code>## NVIDIA open-source:
+pacman -S xf86-video-nouveau mesa mesa-vdpau libva-vdpau-driver
+
+## NVIDIA proprietární:
+pacman -S nvidia nvidia-utils libva-vdpau-driver
+
+## Intel open-source:
+pacman -S xf86-video-intel mesa libva-intel-driver</code></pre></li>
+</ul>
+<br>
+
+<h3 id="gd4.3">HW-specific konfigurace:</h3>
+<div class="spoilwrapper"><div class="spoiltitle">
+<span class="spoilbtn" data-show="► (pra)Staré ThinkPad NTBs" data-hide="▼ (pra)Staré ThinkPad NTBs">► (pra)Staré ThinkPad NTBs</span></div>
+<div class="spoilcontent">
+<ul>
+<li>Nainstalujte si <strong>tp-smapi</strong>.</li>
+<li style="list-style-type: none"><pre><code>pacman -S tp_smapi</code></pre></li>
+<li>Následně neinstalujte balíček <strong>acpi</strong> v sekci <em>Konfigurace</em>.</li>
+</ul></div></div>
+<div class="spoilwrapper"><div class="spoiltitle">
+<span class="spoilbtn" data-show="► Novější ThinkPad NTBs (Sandy Bridge a výše)" data-hide="▼ Novější ThinkPad NTBs (Sandy Bridge a výše)">► Novější ThinkPad NTBs (Sandy Bridge a výše)</span></div>
+<div class="spoilcontent">
+<ul>
+<li>Nainstalujte si <strong>acpi-call</strong>.</li>
+<li style="list-style-type: none"><pre><code>pacman -S acpi_call</code></pre></li>
+<li>Následně neinstalujte balíček <strong>acpi</strong> v sekci <em>Konfigurace</em>.</li>
+</ul></div></div>
+<div class="spoilwrapper"><div class="spoiltitle">
+<span class="spoilbtn" data-show="► Virtuální OS přes GNOME Boxes" data-hide="▼ Virtuální OS přes GNOME Boxes">► Virtuální OS přes GNOME Boxes</span></div>
+<div class="spoilcontent">
+<ul>
+<li>Nainstalujte si grafický ovladač <strong>qxl</strong> a <strong>spice-vdagent</strong>.</li>
+<li style="list-style-type: none"><pre><code>pacman -S xf86-video-qxl spice-vdagent</code></pre></li>
+</ul></div></div>
+<div class="spoilwrapper"><div class="spoiltitle">
+<span class="spoilbtn" data-show="► Broadcom WiFi adaptér" data-hide="▼ Broadcom WiFi adaptér">► Broadcom WiFi adaptér</span></div>
+<div class="spoilcontent">
+<ul>
+<li>Nainstalujte si <strong>broadcom-wl</strong>.</li>
+<li style="list-style-type: none"><pre><code>pacman -S dkms broadcom-wl-dkms</code></pre></li>
+<li>Otevřete nastavení <em>GRUB</em>:</li>
+<li style="list-style-type: none"><pre><code>nano /etc/default/grub</code></pre></li>
+<li>Zakažte ostatní ovladače.</li>
+<li style="list-style-type: none"><pre><code>GRUB_CMDLINE_LINUX_DEFAULT="quiet modprobe.blacklist=b43,b43legacy,ssb,brcmfmac,brcmsmac"</code></pre></li>
+<li>Uložte a aktualizujte konfiguraci <em>GRUB</em>.</li>
+<li style="list-style-type: none"><pre><code>grub-mkconfig -o /boot/grub/grub.cfg</code></pre></li>
+</ul></div></div>
+<br>
+
+<h3 id="gd4.4">Grafické rozhraní:</h3>
+<ul>
+<li>Nainstalujte desktopové prostředí <strong>GNOME</strong>.</li>
+<li style="list-style-type: none"><pre><code>pacman -S gdm
+pacman -S gnome network-manager-applet gnome-tweaks</code></pre></li>
+<li>Z výběru balíčků zvolte následující:</li>
+<li style="list-style-type: none"><pre><code>epiphany, file-roller, gedit, gnome-backgrounds, gnome-calculator, gnome-characters,
+gnome-clocks, gnome-color-manager, gnome-control-center, gnome-font-viewer,
+gnome-keyring, gnome-menus, gnome-screenshot, gnome-shell-extensions, gnome-system-monitor,
+gnome-terminal, gnome-video-effects, gvfs, gvfs-goa, gvfs-google, gvfs-mtp, mousetweaks,
+mutter, nautilus, networkmanager, xdg-user-dirs-gtk, gnome-boxes, gnome-software</code></pre></li>
+<li>Čísla výše zmíněných balíčků (v čase se mění) zadejte následujícím způsobem a stiskněte <strong>Enter</strong>.</li>
+<li style="list-style-type: none"><pre><code>4,6,8,9,11,12,...,63</code></pre></li>
+<li>Ponechte výchozí zdroj pro <em>libjack</em>.</li>
+<li>Nastavte spuštění <em>GNOME</em> při startu:</li>
+<li style="list-style-type: none"><pre><code>systemctl enable gdm
+systemctl enable NetworkManager</code></pre></li>
+<li>Stiskněte klávesovou zkratku <strong>Ctrl</strong> + <strong>D</strong>.</li>
+<li>Odpojte oddíly nového OS.</li>
+<li style="list-style-type: none"><pre><code>umount -R /mnt</code></pre></li>
+<li>Restartujte PC.</li>
+<li style="list-style-type: none"><pre><code>reboot</code></pre></li>
+</ul>
+<br>
+
+<h3 id="gd4.5">Nastavení po prvním přihlášení:</h3>
+<ul>
+<li>Po chvíli se zobrazí přihlašovací obrazovka <em>GNOME</em> s vytvořeným účtem správce. Přihlaste se.</li>
+<li>Připojte se k internetu.</li>
+<li>Otevřete si <span class="green">Terminál</span>.</li>
+<li>Deaktivujte uživatele <strong>root</strong> a zároveň ověřte korektní konfiguraci <em>sudo</em>:</li>
+<li style="list-style-type: none"><pre><code>sudo passwd -l root</code></pre></li>
+<li>Doinstalujte důležité balíčky:</li>
+<li style="list-style-type: none"><pre><code>sudo pacman -S acpi asp flatpak git gnu-free-fonts gstreamer-vaapi libmatroska nftables ninja noto-fonts noto-fonts-emoji tlp ttf-dejavu ttf-droid ttf-liberation ttf-roboto vi
+sudo systemctl enable tlp
+sudo systemctl enable tlp-sleep
+sudo systemctl mask systemd-rfkill
+sudo systemctl mask systemd-rfkill.socket</code></pre></li>
+<li>Nainstalujte si <strong>Paper Icon Theme</strong>:</li>
+<li style="list-style-type: none"><pre><code>git clone https://aur.archlinux.org/paper-icon-theme-git.git
+cd paper-icon-theme-git
+makepkg -sri</code></pre></li>
+<li>Otevřete si <span class="green">Vylepšení</span> a zvolte <strong>Paper</strong> jako motiv pro ikony.</li>
+<li>Vytvořte v nastavení běžného uživatele pro denní provoz (podrobnější návod <a target="_blank" rel="noopener" href="https://securityhandbook.cz/cs/lnx/index.php#lnx2.2">zde</a>.</li>
+<li>Restartujte OS a přihlaste se na vytvořeného uživatele.</li>
+</ul>
+<br>
+
+<h3 id="gd4.6">Aplikace:</h3>
+<ul>
+<li>Otevřete si <span class="green">Terminál</span>. Nainstalujte aplikace / flatpak verze aplikací.</li>
+<li style="list-style-type: none"><pre><code>sudo pacman -S mpv youtube-dl chromium
+flatpak remote-add --if-not-exists flathub https://flathub.org/repo/flathub.flatpakrepo
+flatpak install flathub org.gnome.Evince
+flatpak install flathub org.gnome.eog
+flatpak install flathub org.libreoffice.LibreOffice
+flatpak install flathub org.gimp.GIMP
+flatpak install flathub io.atom.Atom
+flatpak install flathub io.atom.electron.BaseApp
+flatpak install flathub com.transmissionbt.Transmission
+flatpak install flathub com.valvesoftware.Steam</code></pre></li>
+</ul>
+<br>
+
+<h3 id="gd4.7">Zabezpečení:</h3>
+<ul>
+<li>Nastavte <em>/tmp</em> oddíl jako <strong>noexec</strong>. Nápověda <a target="_blank" rel="noopener" href="https://securityhandbook.cz/cs/lnx/index.php#lnx2.1">zde</a>, je třeba upravit syntax.</li>
+<li>Nepoužíváte-li <em>IPv6</em>, zakažte jej. Nápověda <a target="_blank" rel="noopener" href="https://securityhandbook.cz/cs/lnx/index.php#lnx2.3">zde</a>, je třeba upravit syntax.</li>
+<li>Nastavte CZ.NIC <em>DNSSEC</em> – 193.17.47.1,185.43.135.1 – návod <a target="_blank" rel="noopener" href="https://securityhandbook.cz/cs/lnx/index.php#lnx2.3">zde</a>.</li>
+<li>Nastavte <strong>firewall</strong> (podrobnější návod <a target="_blank" rel="noopener" href="https://securityhandbook.cz/cs/lnx/adv.php#lnx2.1">zde</a>):</li>
+<li style="list-style-type: none"><pre><code>sudo su -
+nano /etc/nftables.conf
+---------------------
+table inet filter {
+    chain input {
+        type filter hook input priority 0; policy drop;
+        ct state invalid drop
+        ct state established,related accept
+        iif "lo" accept
+    }
+
+    chain forward {
+        type filter hook forward priority 0; policy drop;
+    }
+
+    chain output {
+        type filter hook output priority 0; policy accept;
+    }
+}
+---------------------
+systemctl enable nftables
+systemctl start nftables
+nft list ruleset</code></pre></li>
+<li>Bezpečně nastavte prohlížeč(e). Návod <a target="_blank" rel="noopener" href="https://securityhandbook.cz/cs/lnx/index.php#lnx4">zde</a>.</li>
+<li>Restartujte OS.</li>
+</ul>
+<br>
+<div class="alert success"><p><em class="icon-ok-circled"></em><strong>Úspěch</strong><br>
+Tímto jste nainstalovali Arch Linux a provedli jeho základní konfiguraci.</p></div>
+<br><br><hr>
+<h3 class="nocol">Hezký den. <img class="smile" src="https://securityhandbook.cz/img/sm/smile.svg" alt="smile"></h3>
+</div></article>
+</main>
+<footer>
+<p>Toto dílo podléhá licenci <a target="_blank" rel="noopener" href="https://creativecommons.org/licenses/by-nc-sa/4.0/deed.cs">Creative Commons Attribution-NonCommercial-ShareAlike 4.0 International License</a>.<br>Podrobnosti o výjimkách z výše zmíněné licence naleznete <a target="_blank" rel="noopener" href="https://securityhandbook.cz/license_cs.php">zde</a>.</p>
+<p>2016-2022 <a target="_blank" rel="noopener" href="https://github.com/SecurityHandbook">@SecurityHandbook</a></p>
+<p><a target="_blank" rel="noopener" href="https://creativecommons.org/licenses/by-nc-sa/4.0/deed.cs"><img alt="Creative Commons Licence" style="border-width:0" src="https://securityhandbook.cz/img/license.png"></a></p>
+<p><a target="_blank" rel="noopener" href="https://github.com/SecurityHandbook/guides"><img alt="github" src="https://securityhandbook.cz/img/github.png"></a></p>
+</footer>
+<a href="#0" class="cd-top">Top</a>
+<noscript><p>Zapněte si prosím JavaScript, je důležitý pro využití všech funkcí webu. Je bez malware (jQuery + pár řádků).</p></noscript>
+<script src="https://securityhandbook.cz/resources/js/jquery-3.4.1.min.js"></script>
+<script src="https://securityhandbook.cz/resources/js/scripts.js"></script>
+<script src="https://securityhandbook.cz/resources/js/scroll.js"></script>
+</body></html>

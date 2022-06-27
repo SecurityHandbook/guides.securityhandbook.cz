@@ -1,0 +1,43 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<urlset
+      xmlns="http://www.sitemaps.org/schemas/sitemap/0.9"
+      xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+      xsi:schemaLocation="http://www.sitemaps.org/schemas/sitemap/0.9
+            http://www.sitemaps.org/schemas/sitemap/0.9/sitemap.xsd">
+<url>
+  <loc>https://securityhandbook.cz/cs/index.php</loc>
+  <changefreq>yearly</changefreq>
+</url>
+<url>
+  <loc>https://securityhandbook.cz/cs/lnx/arch_install.php</loc>
+  <changefreq>yearly</changefreq>
+</url>
+<url>
+  <loc>https://securityhandbook.cz/cs/wnt/disk_cleanup.php</loc>
+  <changefreq>yearly</changefreq>
+</url>
+<url>
+  <loc>https://securityhandbook.cz/cs/wnt/malware.php</loc>
+  <changefreq>yearly</changefreq>
+</url>
+<url>
+  <loc>https://securityhandbook.cz/cs/wnt/ransom.php</loc>
+  <changefreq>yearly</changefreq>
+</url>
+<url>
+  <loc>https://securityhandbook.cz/cs/wnt/rescue_disk.php</loc>
+  <changefreq>yearly</changefreq>
+</url>
+<url>
+  <loc>https://securityhandbook.cz/cs/wnt/rufus.php</loc>
+  <changefreq>yearly</changefreq>
+</url>
+<url>
+  <loc>https://securityhandbook.cz/cs/wnt/w8install.php</loc>
+  <changefreq>yearly</changefreq>
+</url>
+<url>
+  <loc>https://securityhandbook.cz/cs/wnt/w10install.php</loc>
+  <changefreq>yearly</changefreq>
+</url>
+</urlset>

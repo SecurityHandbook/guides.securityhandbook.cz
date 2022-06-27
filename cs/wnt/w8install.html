@@ -1,0 +1,71 @@
+<!DOCTYPE html>
+<html lang="cs">
+<head>
+<meta charset="utf-8">
+<link rel="preload" as="style" href="https://securityhandbook.cz/resources/css/article_alpha.css">
+<link href="https://securityhandbook.cz/resources/css/article_alpha.css" rel="stylesheet" media="screen">
+<link href="https://securityhandbook.cz/resources/css/fonts_min.css" rel="stylesheet">
+<title>Čistá instalace Windows 8.1</title>
+<meta name="description" content="Jak na čistou instalaci Windows 8.1.">
+<meta property="og:title" content="Čistá instalace Windows 8.1">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="HandheldFriendly" content="True">
+<meta name="theme-color" content="#323e4e">
+</head>
+<body>
+<main>
+<article><div class="text">
+<h1>Čistá instalace Windows 8.1</h1>
+<p>Pokud nemáte k dispozici instalační DVD, můžete jej jednoduše vytvořit. Budete potřebovat volné médium (DVD, USB disk) o velikosti alespoň <em>8 GB</em> a funkční počítač, ze kterého na něj můžete nahrát instalační soubory Windows.</p>
+<br>
+<h2>Stažení originálního ISO Windows 8.1:</h2>
+<p>Instalační ISO je volně dosutpné ke stáhnutí ze stránek MS: <a target="_blank" rel="noopener" href="https://www.microsoft.com/cs-cz/software-download/windows8ISO">https://www.microsoft.com/cs-cz/software-download/windows8ISO</a></p>
+<br>
+<h2>Vytvoření instalačního média Windows 8.1:</h2>
+<ul>
+<li>Vytvořte instalační médium z ISO souboru, pro USB doporučím program <a target="_blank" rel="noopener" href="https://rufus.ie/">Rufus</a> (návod <a target="_blank" rel="noopener" href="https://guides.securityhandbook.cz/cs/wnt/rufus.php">zde</a>).</li>
+<li>Nabootujte z vytvořeného instalačního média.</li>
+<li>Zkontrolujte konfiguraci jazyka a klávesnice a klikněte na tlačítko <span class="green">Další</span>.</li>
+<li>Klikněte na tlačítko <span class="green">Nainstalovat</span>.</li>
+<li>Vložte licenční klíč (máte-li OEM licenci dodanou s NTB, klíč není potřeba).</li>
+<li>Zvolte požadovanou edici OS.</li>
+<li>Přijměte licenční podmínky a pokračujte v instalaci.</li>
+</ul>
+<br><br><hr><br>
+<h2>DISKPART &ndash; vyčištění disku</h2>
+<p>Pokud vytváříte nový OS z důvodu problémů s předchozí instalací, je rozumné před instalací kompletně vyčistit disk. Tento postup je také standardem při instalaci na nový disk.</p>
+<div class="alert exclaim"><p><em class="icon-attention"></em><strong>Varování</strong><br>
+Vyčištění disku smaže veškerá existující data na příslušném disku! <strong>Pouze pro pokročilé!</strong></p></div>
+<div class="spoilwrapper"><div class="spoiltitle">
+<span class="spoilbtn" data-show="► Návod" data-hide="▼ Návod">► Návod</span></div>
+<div class="spoilcontent">
+<ul>
+<li>Ve výběru možnosti instalace zvolte: Vlastní: Jenom nainstalovat Windows (pokročilé).</li>
+<li>Ve výběru disků stiskněte <strong>Shift</strong> + <strong>F10</strong>.</li>
+<li>Do příkazové řádky postupně zadejte následující příkazy:</li>
+<li style="list-style-type: none"><pre><code>diskpart
+list disk             //vypíše všechny připojené disky a jejich čísla
+select disk X         //místo "X" dosaďte číslo vašeho systémového disku
+clean                 //vyčistí zvolený disk
+exit
+exit</code></pre></li>
+<li style="list-style-type: none"><img src="https://guides.securityhandbook.cz/img/cs/w10diskpart.png" alt="w10diskpart"></li>
+<li>Ve výběru disků klikněte na tlačítko: <img src="https://guides.securityhandbook.cz/img/cs/upd.png" alt="upd"></li>
+<li>Zvolte prázdný vyčištěný systémový disk a pokračujte v instalaci.</li>
+</ul></div></div>
+<br><br><hr>
+<h3 class="nocol">Hezký den. <img class="smile" src="https://securityhandbook.cz/img/sm/smile.svg" alt="smile"></h3>
+</div></article>
+</main>
+<footer>
+<p>Toto dílo podléhá licenci <a target="_blank" rel="noopener" href="https://creativecommons.org/licenses/by-nc-sa/4.0/deed.cs">Creative Commons Attribution-NonCommercial-ShareAlike 4.0 International License</a>.<br>Podrobnosti o výjimkách z výše zmíněné licence naleznete <a target="_blank" rel="noopener" href="https://securityhandbook.cz/license_cs.php">zde</a>.</p>
+<p>2016-2022 <a target="_blank" rel="noopener" href="https://github.com/SecurityHandbook">@SecurityHandbook</a></p>
+<p><a target="_blank" rel="noopener" href="https://creativecommons.org/licenses/by-nc-sa/4.0/deed.cs"><img alt="Creative Commons Licence" style="border-width:0" src="https://securityhandbook.cz/img/license.png"></a></p>
+<p><a target="_blank" rel="noopener" href="https://github.com/SecurityHandbook/guides"><img alt="github" src="https://securityhandbook.cz/img/github.png"></a></p>
+</footer>
+<a href="#0" class="cd-top">Top</a>
+<noscript><p>Zapněte si prosím JavaScript, je důležitý pro využití všech funkcí webu. Je bez malware (jQuery + pár řádků).</p></noscript>
+<script src="https://securityhandbook.cz/resources/js/jquery-3.4.1.min.js"></script>
+<script src="https://securityhandbook.cz/resources/js/scripts.js"></script>
+<script src="https://securityhandbook.cz/resources/js/scroll.js"></script>
+</body></html>

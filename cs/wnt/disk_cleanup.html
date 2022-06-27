@@ -1,0 +1,192 @@
+<!DOCTYPE html>
+<html lang="cs">
+<head>
+<meta charset="utf-8">
+<link rel="preload" as="style" href="https://securityhandbook.cz/resources/css/article_alpha.css">
+<link href="https://securityhandbook.cz/resources/css/article_alpha.css" rel="stylesheet" media="screen">
+<link href="https://securityhandbook.cz/resources/css/fonts_min.css" rel="stylesheet">
+<title>Bezpečné čištění OS Windows</title>
+<meta name="description" content="Jak bezpečně čistit OS Windows.">
+<meta property="og:title" content="Bezpečné čištění OS Windows">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="HandheldFriendly" content="True">
+<meta name="theme-color" content="#323e4e">
+</head>
+<body>
+<main>
+<article><div class="text">
+<h1>Bezpečné čištění OS Windows</h1>
+<h3 class="red"><img src="https://securityhandbook.cz/img/icons/ccleaner.png" alt="ch">Varování &ndash; CCleaner a podobné čističe</h3>
+<p>Čističe OS čistící registry jsou pro OS nebezpečné, nedoporučované a Microsoftem nepodporované.</p>
+<div class="alert info"><p><em class="icon-info-circled"></em><strong>Info</strong><br>
+Přečtěte si prosím zásady podpory Microsoftu: <a target="_blank" rel="noopener" href="https://support.microsoft.com/cs-cz/kb/2563254">https://support.microsoft.com/cs-cz/kb/2563254</a></p></div>
+<h3>Rizika užívání čističů registru:</h3>
+<ul>
+<li>mohou způsobit nevratné škody vašemu registru =&gt; OS</li>
+<li>mohou s sebou do OS přinést malware</li>
+<li>mohou registr spíše zpomalit než zrychlit</li>
+<li>zbaví vás nároku na podporu do MS a většiny diskuzních fór</li>
+</ul>
+<div class="spoilwrapper"><div class="spoiltitle">
+<span class="spoilbtn" data-show="► Rozebrání problematiky" data-hide="▼ Rozebrání problematiky">► Rozebrání problematiky</span></div>
+<div class="spoilcontent">
+<p>Spousta problémů s OS, se kterými se denně potkávám na různých fórech, je způsobena právě čističi registru, defragmentátory registru, optimizéry registru apod.</p>
+<div class="alert info"><p><em class="icon-info-circled"></em><strong>Info</strong><br>
+Registr je velká hierarchická databáze obsahující miliony hodnot, které určují chod OS. Máte-li nějakou databázi, také do ní nevpustíte naprosto cizí program, který vám databázi vyčistí na základě svých generických pravidel.</p></div>
+<p>Tyto čističe zaručují zrychlení registru. Pokud bychom měli prohledat celý registr, chvíli to zabere &ndash; nic takového ovšem aplikace nedělají. Aplikace se obracejí do specifických oblastí registru, kde očekávají nějaké své nastavení, případně chtějí manipulovat s COM objekty &ndash; tuto operaci mohou provést během několika milisekund.</p>
+<p>Z toho vyplývá, že žádné zrychlení ve většině případu nenastane. Pokud by aplikace chtěla prohledat celý registr, přečtení všech hodnot mého HKCU klíče zabralo OS 314 milisekund &ndash; zrychlení (pokud nějaké) by se pohybovalo v řádu desítek až stovek mikrosekund.</p>
+<p>Celé čištění/optimalizování registru je tedy z technického hlediska založeno pouze na tzv. <a target="_blank" rel="noopener" href="https://cs.wikipedia.org/wiki/Placebo">placebo efektu</a>.</p>
+<div class="alert info"><p><em class="icon-info-circled"></em><strong>Info</strong><br>
+Čističe registru hledají chyby v registru na základě svých pravidel. Každá hodnota registru je unikát a může se s jednotlivými OS lišit. <strong><em>Nikdo</em></strong> nemůže tímto způsobem 100% určit, že hodnota je chybná/nepotřebná.</p></div>
+<p>Velmi oblíbená je detekce nepoužívaných klíčů registru. Ne každý nepoužívaný klíč je špatný, právě naopak. Klíč může být opuštěný, jelikož obsahuje hodnoty, které v budoucnu může žádat a potřebovat jiná aplikace.</p>
+<p>Čištění registru tedy může být nebezpečné a způsobovat nevratné problémy, které se nutně nemusí projevit ihned. A spíše než zrychlí, váš registr zpomalí...</p>
+</div></div>
+<p>OS Windows má vestavěné veškeré nutné nástroje na svou údržbu již od dob Windows XP. Nějaké další čistící aplikace třetí strany tedy nejsou potřeba, jsou spíše nežádoucí.</p>
+<p>Možná neposkytují takový komfort (příjemné barevné GUI) jako aplikace třetí strany, ovšem svou práci plní perfektně a ve většině případů lépe než čističe třetí strany.</p>
+<div class="spoilwrapper"><div class="spoiltitle">
+<span class="spoilbtn" data-show="► Rozebrání na příkladu: CCleaner" data-hide="▼ Rozebrání na příkladu: CCleaner">► Rozebrání na příkladu: CCleaner</span></div>
+<div class="spoilcontent">
+<p>CCleaner je mezi širokou veřejností velmi oblíbený.</p>
+<p>Jeho základní funkce jsou:</p>
+<ul>
+<li>čištění OS (temp soubory, koš, logy,...; prohlížeče a aplikace)</li>
+<li>čištění registru</li>
+<li>správa aplikací (odinstalace, start po spuštění, kontextové menu, úlohy,...)</li>
+<li>analýza disku, vyhledání duplicitních souborů, čistič disku</li>
+<li>základní správa bodů obnovy</li>
+</ul>
+<p>Jediné funkce, které poskytuje navíc oproti OS jsou analýza disku, vyhledání duplicitních souborů a čistič disku - tedy funkce, které nejsou primární.</p>
+<p>Stojí to za instalaci nedůvěryhodné aplikace třetí strany, která přichází ve free verzi s foistware a je potenciálně nebezpečná pro OS?</p>
+<div class="alert success"><p><em class="icon-ok-circled"></em><strong>Tip</strong><br>
+Pokud chcete i tak používat CCleaner, doporučuji stáhnout si portable verzi a nepoužívat část čistící registr.</p></div>
+</div></div>
+<br><br><hr><br>
+<h2>Bezpečné čištění OS Windows:</h2>
+<p>K bezpečné údržbě vašeho OS používejte vestavěné nástroje Windows.</p>
+<h3 class="nocol"><img src="https://securityhandbook.cz/img/icons/cleanmgr.png" alt="cleanmgr"> Disk Space Cleanup Manager</h3>
+<ul>
+<li>Otevřete si <strong>hledání Windows</strong>, do vyhledávacího pole zadejte:</li><li style="list-style-type: none"><pre><code>cleanmgr</code></pre></li>
+<li>Nalezenou položku otevřete.</li>
+<li>Budete-li vyzváni k výběru disku k pročištění, ponechte výchozí nastavení (<em>systémový disk C</em>) a klikněte na tlačítko <span class="green">OK</span>.</li>
+<li>Otevře se nabídka souborů ke smazání. Zde zatrhněte veškeré dostupné možnosti kromě <strong>Mezipaměť shaderů DirectX</strong>, <strong>Stažené soubory</strong> a <strong>Miniatury</strong>.</li>
+<li>Klikněte na <span class="green">OK</span> a odsouhlaste odstranění souborů.</li>
+<li>Nechte aplikaci pracovat, po dokončení činnosti se sama ukončí.</li>
+</ul>
+<br>
+<div class="alert info"><p><em class="icon-info-circled"></em><strong>Info</strong><br>
+Následující postup je vhodné provádět 1x za dva týdny, případně měsíčně.</p></div>
+<h3 class="nocol"><img src="https://securityhandbook.cz/img/icons/cmd.png" alt="cmd"> Čištění TEMP</h3>
+<ul>
+<li>Stiskněte kláv. zkratku <img src="https://securityhandbook.cz/img/icons/wkey.png" alt="win"> <span class="ks">+ X</span> a z nabídky vyberte <span class="green">Windows PowerShell</span>.</li>
+<li>Do příkazové řádky zadejte následující příkaz:</li>
+<li style="list-style-type: none"><pre><code>Get-ChildItem -Recurse $Env:TMP | Remove-Item -Recurse -Force</code></pre>
+a stiskněte <strong>Enter</strong>.</li>
+<li>Vyčkejte na dokončení požadované akce a aplikaci následně zavřete. Případné chybové hlášky ignorujte, některé soubory nemusí být možné odstranit, pokud jsou používány.</li>
+</ul>
+<br><br><hr><br>
+
+<h2>Vsuvka: Málo místa na disku?</h2>
+<p>Zkuste několik následujících tipů.</p>
+<div class="spoilwrapper"><div class="spoiltitle">
+<span class="spoilbtn" data-show="► Pročištění záložních souborů" data-hide="▼ Pročištění záložních souborů">► Pročištění záložních souborů</span></div>
+<div class="spoilcontent">
+<div class="alert info"><p><em class="icon-info-circled"></em><strong>Info</strong><br>
+Po aplikování následujících kroků nebude možné odinstalovat předchozí aktualizace OS.</p></div>
+<ul>
+<li>Stiskněte kláv. zkratku <img src="https://securityhandbook.cz/img/icons/wkey.png" alt="win"> <span class="ks">+ X</span> a z nabídky vyberte <span class="green">Windows PowerShell (správce)</span>.</li><li style="list-style-type: none"><img src="https://guides.securityhandbook.cz/img/cs/wx.png" alt="wx"></li>
+<li>Do příkazové řádky zadejte následující příkaz:</li>
+<li style="list-style-type: none"><pre><code>sfc /scannow</code></pre></li>
+<li>Spustí se kontrola integrity systémových souborů. Před odstraněním zastaralých záložních souborů je sken žádoucí.</li>
+<li>Po dokončení skenu odstraňte nepotřebné záložní soubory:</li>
+<li style="list-style-type: none"><pre><code>dism /online /cleanup-image /startcomponentcleanup /resetbase</code></pre></li>
+<li>Vyčkejte na dokončení požadované akce a následně restartujte OS.</li>
+</ul></div></div>
+<div class="spoilwrapper"><div class="spoiltitle">
+<span class="spoilbtn" data-show="► Hloubkové Vyčištění disku" data-hide="▼ Hloubkové Vyčištění disku">► Hloubkové Vyčištění disku</span></div>
+<div class="spoilcontent">
+<div class="alert info"><p><em class="icon-info-circled"></em><strong>Info</strong><br>
+Po aplikování následujících kroků nebude možné odinstalovat předchozí aktualizace OS.</p></div>
+<ul>
+<li>Otevřete si <strong>hledání Windows</strong>, do vyhledávacího pole zadejte:</li><li style="list-style-type: none"><pre><code>cleanmgr</code></pre></li>
+<li>Na nalezenou položku klikněte pravým tlačítkem a zvolte možnost: <img src="https://securityhandbook.cz/img/icons/admin.png" alt="admin"> <strong>Spustit jako správce</strong>.</li>
+<li>Budete-li vyzváni k výběru disku k pročištění, ponechte výchozí nastavení (<em>systémový disk C</em>) a klikněte na tlačítko <span class="green">OK</span>.</li>
+<li>Otevře se nabídka souborů ke smazání. Zatrhněte veškeré dostupné možnosti.</li>
+<li>Klikněte na <span class="green">OK</span> a odsouhlaste odstranění souborů.</li>
+<li>Nechte aplikaci pracovat, po dokončení činnosti se sama ukončí.</li>
+<li>Restartujte OS.</li>
+</ul></div></div>
+<div class="spoilwrapper"><div class="spoiltitle">
+<span class="spoilbtn" data-show="► Body obnovy" data-hide="▼ Body obnovy">► Body obnovy</span></div>
+<div class="spoilcontent">
+<ul>
+<li>Stiskněte kláv. zkratku <img src="https://securityhandbook.cz/img/icons/wkey.png" alt="win"> <span class="ks">+ X</span> a z nabídky vyberte <span class="green">Windows PowerShell (správce)</span>.</li>
+<li style="list-style-type: none"><img src="https://guides.securityhandbook.cz/img/cs/wx.png" alt="wx"></li>
+<li>Do příkazové řádky zadejte následující příkazy:</li>
+<li style="list-style-type: none"><pre><code>vssadmin delete shadows /for=$Env:SystemDrive /all /quiet
+vssadmin resize shadowstorage /for=$Env:SystemDrive /on=$Env:SystemDrive /maxsize=2GB</code></pre></li>
+<li>Dojde k odstranění všech bodů obnovy a omezení velikostního limitu na 2 GiB. Vyčkejte na dokončení požadované akce a následně restartujte OS.</li>
+</ul></div></div>
+
+<div class="spoilwrapper"><div class="spoiltitle">
+<span class="spoilbtn" data-show="► Nepotřebné aplikace (po spuštění)" data-hide="▼ Nepotřebné aplikace (po spuštění)">► Nepotřebné aplikace (po spuštění)</span></div>
+<div class="spoilcontent">
+<ul>
+<li>Stiskněte kláv. zkratku <img src="https://securityhandbook.cz/img/icons/wkey.png" alt="win"> <span class="ks">+ X</span> a z nabídky vyberte <span class="green">Aplikace a funkce</span>.</li>
+<li>V seznamu identifikujte nepotřebné aplikace, které již pouze zabírají místo na disku, a odinstalujte je.</li>
+<li>V záložce <span class="green">Po spuštění</span> vypněte zbytečné položky zpomalující start OS.</li>
+<li>Aplikaci zavřete.</li>
+</ul></div></div>
+<br><br><hr><br>
+
+<h2>Automatizace bezpečného čištění OS:</h2>
+<p>Výše uvedené dva kroky nejsou nijak automatizované, čímž v komfortu výrazně zaostávají za pseudo-čističi třetích stran. Není ovšem problém si výše zmíněné kroky automatizovat sám &ndash; je to práce na pár minut, která přinese kýžený výsledek.</p>
+<h3 class="nocol"><img src="https://securityhandbook.cz/img/icons/cleanmgr.png" alt="cleanmgr"> Vyčištění disku &ndash; nastavení úlohy</h3>
+<ul>
+<li>Stiskněte kláv. zkratku <img src="https://securityhandbook.cz/img/icons/wkey.png" alt="win"> <span class="ks">+ X</span> a z nabídky vyberte <span class="green">Windows PowerShell</span>.</li>
+<li>Do příkazové řádky zadejte následující příkaz:</li>
+<li style="list-style-type: none"><pre><code>cleanmgr /sageset:1</code></pre></li>
+<li>Otevře se konfigurace automatické úlohy Vyčištění disku. Zatrhněte veškeré dostupné možnosti kromě <strong>Mezipaměť shaderů DirectX</strong>, <strong>Stažené soubory</strong> a <strong>Miniatury</strong>.</li>
+<li>Klikněte na <span class="green">OK</span>.</li>
+</ul>
+<br>
+<h3 class="nocol"><img src="https://securityhandbook.cz/img/icons/taskschd.png" alt="taskschd"> Naplánování úlohy &ndash; dusting</h3>
+<ul>
+<li>Stáhněte si skript <a download="dusting.zip" href="https://github.com/cuffeax/WNT_scripts/releases/download/v1.0/dusting.zip">Dusting</a>.</li>
+<li>Uložte a obsah archivu vyextrahujte <span class="blue">na Plochu</span>.</li>
+<li>Skript jménem <span class="green">dusting</span>, který slouží k pravidelnému čištění, přesuňte z Plochy do <span class="blue">kořene systémového disku (<strong>C:\</strong>)</span>.</li>
+<li>Stiskněte kláv. zkratku <img src="https://securityhandbook.cz/img/icons/wkey.png" alt="win"> <span class="ks">+ R</span>, do textového pole zadejte:</li><li style="list-style-type: none"><pre><code>taskschd.msc</code></pre>
+a stiskněte <strong>Enter</strong>.</li>
+<li>Otevře se Plánovač úloh, v levém menu klikněte na <span class="green">Knihovna plánovače úloh</span>.</li>
+<li>V pravém menu aplikace klikěnte na tlačítko: <img src="https://guides.securityhandbook.cz/img/cs/duster.png" alt="task1"></li>
+<li>Do položky <strong>Název</strong> vyplňte např. <span class="green">Čištění OS</span> a klikněte na tlačítko <span class="green">Další</span>.</li>
+<li>Zvolte možnost spouštění <strong>Týdně</strong> a klikněte na <span class="green">Další</span>.</li>
+<li>Nastavte opakování na <strong>2</strong> týdny a zatrhněte jeden den, ve který se má úloha spouštět (např. <em>Pondělí</em>). Klikněte na <span class="green">Další</span>.</li>
+<li>Nechte zvolenou možnost <strong>Spustit program</strong> a klikněte na <span class="green">Další</span>.</li>
+<li>Ve volbě programu klikněte na <span class="green">Procházet</span> a zvolte skript <span class="green">dusting</span>, který máte uložený v <span class="blue">C:\</span>.</li>
+<li>Výsledek by tedy měl vypadat takto:</li><li style="list-style-type: none"><img src="https://guides.securityhandbook.cz/img/cs/duster1.png" alt="task2"></li>
+<li>Klikněte na <span class="green">Další</span>.</li>
+<li>Zatrhněte položku: <img src="https://guides.securityhandbook.cz/img/cs/duster2.png" alt="task3"></li>
+<li>Klikněte na tlačítko <span class="green">Dokončit</span>.</li>
+<li>Otevřou se vlastnosti úlohy. V horním menu vlastností se přesuňte do záložky <strong>Nastavení</strong>.</li>
+<li>Zde zatrněte následující položku: <img src="https://guides.securityhandbook.cz/img/cs/duster4.png" alt="task4"></li>
+<li>Klikněte na tlačítko <span class="green">OK</span>.</li>
+<li>Plánovač úloh zavřete.</li>
+</ul>
+<div class="alert success"><p><em class="icon-ok-circled"></em><strong>Úspěch</strong><br>
+Tímto jste nastavili automatické mazání zbytečných souborů, které se spustí jednou za 14 dní. Dále se již o&nbsp;nic nemusíte starat.</p></div>
+<br><br><hr>
+<h3 class="nocol">Hezký den. <img class="smile" src="https://securityhandbook.cz/img/sm/smile.svg" alt="smile"></h3>
+</div></article>
+</main>
+<footer>
+<p>Toto dílo podléhá licenci <a target="_blank" rel="noopener" href="https://creativecommons.org/licenses/by-nc-sa/4.0/deed.cs">Creative Commons Attribution-NonCommercial-ShareAlike 4.0 International License</a>.<br>Podrobnosti o výjimkách z výše zmíněné licence naleznete <a target="_blank" rel="noopener" href="https://securityhandbook.cz/license_cs.php">zde</a>.</p>
+<p>2016-2022 <a target="_blank" rel="noopener" href="https://github.com/SecurityHandbook">@SecurityHandbook</a></p>
+<p><a target="_blank" rel="noopener" href="https://creativecommons.org/licenses/by-nc-sa/4.0/deed.cs"><img alt="Creative Commons Licence" style="border-width:0" src="https://securityhandbook.cz/img/license.png"></a></p>
+<p><a target="_blank" rel="noopener" href="https://github.com/SecurityHandbook/guides"><img alt="github" src="https://securityhandbook.cz/img/github.png"></a></p>
+</footer>
+<a href="#0" class="cd-top">Top</a>
+<noscript><p>Zapněte si prosím JavaScript, je důležitý pro využití všech funkcí webu. Je bez malware (jQuery + pár řádků).</p></noscript>
+<script src="https://securityhandbook.cz/resources/js/jquery-3.4.1.min.js"></script>
+<script src="https://securityhandbook.cz/resources/js/scripts.js"></script>
+<script src="https://securityhandbook.cz/resources/js/scroll.js"></script>
+</body></html>
